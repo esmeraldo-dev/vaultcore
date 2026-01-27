@@ -17,12 +17,14 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tb_wallets")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Wallet {
 
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, precision = 19, scale = 2)
