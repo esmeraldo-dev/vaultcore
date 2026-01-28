@@ -1,5 +1,6 @@
 package br.com.vinicius.vaultcore.service;
 
+import br.com.vinicius.vaultcore.client.AuthorizationClient;
 import br.com.vinicius.vaultcore.exception.BusinessException;
 import br.com.vinicius.vaultcore.model.Transaction;
 import br.com.vinicius.vaultcore.model.User;
@@ -19,6 +20,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
+    private final AuthorizationClient authClient;
 
     @Transactional
     public Transaction transfer(Long payerId, Long payeeId, BigDecimal amount) {
@@ -37,12 +39,15 @@ public class TransactionService {
         User payee = userRepository.findById(payeeId)
                 .orElseThrow(() -> new BusinessException("Recebedor não encontrado."));
 
-        if (payer.getWallet().getBalance().compareTo(amount) <= 0) {
+        if (payer.getWallet().getBalance().compareTo(amount) < 0) {
             throw new BusinessException("Saldo insuficiente na conta");
         }
 
-        payer.getWallet().setBalance(payer.getWallet().getBalance().subtract(amount));
+        if (!isAuthorized()){
+            throw new BusinessException("Transação não autorizada pelo serviço externo.");
+        }
 
+        payer.getWallet().setBalance(payer.getWallet().getBalance().subtract(amount));
         payee.getWallet().setBalance(payee.getWallet().getBalance().add(amount));
 
         Transaction transaction = new Transaction();
@@ -51,5 +56,18 @@ public class TransactionService {
         transaction.setAmount(amount);
 
         return transactionRepository.save(transaction);
+    }
+
+    private boolean isAuthorized() {
+        try {
+            var response = authClient.isAuthorized();
+            if (response == null || !response.containsKey("status")) {
+                return false;
+            }
+            String status = String.valueOf(response.get("status")).trim();
+            return "success".equalsIgnoreCase(status);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
