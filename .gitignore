@@ -13,11 +13,19 @@ target/
 .springBeans
 .sts4-cache
 
+# Java e Maven
+*.class
+*.jar
+*.war
+*.ear
+
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
+out/
+gen/
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +39,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs e Temporários
+*.log
+temp/
