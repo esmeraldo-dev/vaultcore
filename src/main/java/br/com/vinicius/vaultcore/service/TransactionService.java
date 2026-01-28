@@ -6,6 +6,7 @@ import br.com.vinicius.vaultcore.model.User;
 import br.com.vinicius.vaultcore.repository.TransactionRepository;
 import br.com.vinicius.vaultcore.repository.UserRepository;
 import br.com.vinicius.vaultcore.repository.WalletRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,14 @@ public class TransactionService {
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
 
+    @Transactional
     public Transaction transfer(Long payerId, Long payeeId, BigDecimal amount) {
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException("O valor da transferência deve ser maios que zero");
         }
 
-        if (payerId.equals(payerId)) {
+        if (payerId.equals(payeeId)) {
             throw new BusinessException("Você não pode transferir dinheiro para propria conta!");
         }
 
