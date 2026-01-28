@@ -94,4 +94,30 @@ class TransactionServiceTest {
 
         assertEquals(transferValue, result.getAmount());
     }
+
+    @Test
+    @DisplayName("Deve lançar exceção quando o pagador tenta transferir para si mesmo")
+    void transferCase3(){
+        Long sameId = 1L;
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+           transactionService.transfer(sameId, sameId, new BigDecimal("100.00"));
+        });
+
+        assertEquals("Você não pode transferir dinheiro para propria conta!", exception.getMessage());
+
+        verify(userRepository, times(0)).findById(any());
+    }
+    @Test
+    @DisplayName("Deve lançar exceção quando um dos usuários não for encontrado.")
+    void transferCase4(){
+        Long invalidId = 999L;
+
+        when(userRepository.findById(invalidId)).thenReturn(Optional.empty());
+
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            transactionService.transfer(invalidId, 2L, new BigDecimal("100.00"));
+        });
+        assertEquals("Pagador não encontrado", exception.getMessage());
+    }
 }
