@@ -3,6 +3,8 @@ package br.com.vinicius.vaultcore.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
-@Entity
+@Entity (name = "users")
 @Table(name = "tb_users")
 @Getter @Setter
 @NoArgsConstructor
@@ -27,7 +29,10 @@ public class User {
     private Long id;
 
     @NotBlank(message = "O nome é obrigatório")
-    private String name;
+    private String firstName;
+
+    @NotBlank(message = "O sobrenome é obrigatório")
+    private String lastName;
 
     @Column(unique = true)
     @Email(message = "Email inválido")
@@ -37,11 +42,14 @@ public class User {
     @Column(unique = true)
     @CPF(message = "CPF inválido")
     @NotBlank
-    private String cpf;
+    private String document;
 
     @NotBlank
     private String password;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 }
