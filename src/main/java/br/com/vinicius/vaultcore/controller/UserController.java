@@ -1,6 +1,7 @@
 package br.com.vinicius.vaultcore.controller;
 
 import br.com.vinicius.vaultcore.dto.UserDTO;
+import br.com.vinicius.vaultcore.dto.UserResponseDTO;
 import br.com.vinicius.vaultcore.model.User;
 import br.com.vinicius.vaultcore.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +24,31 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserDTO user) {
         User newUser = userService.createUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+
+        var response = new UserResponseDTO(
+                newUser.getId(),
+                newUser.getFirstName(),
+                newUser.getLastName(),
+                newUser.getEmail(),
+                newUser.getUserType()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.getAllUsers().stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getUserType()
+                ))
+                .toList();
+        return ResponseEntity.ok(users);
     }
 }
