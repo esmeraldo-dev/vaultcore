@@ -1,6 +1,7 @@
 package br.com.vinicius.vaultcore.service;
 
 import br.com.vinicius.vaultcore.client.AuthorizationClient;
+import br.com.vinicius.vaultcore.dto.TransactionResponseDTO;
 import br.com.vinicius.vaultcore.exception.BusinessException;
 import br.com.vinicius.vaultcore.model.Transaction;
 import br.com.vinicius.vaultcore.model.User;
@@ -25,7 +26,7 @@ public class TransactionService {
     private final NotificationService notificationService;
 
     @Transactional
-    public Transaction transfer(Long payerId, Long payeeId, BigDecimal amount) {
+    public TransactionResponseDTO transfer(Long payerId, Long payeeId, BigDecimal amount) {
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException("O valor da transferência deve ser maios que zero");
@@ -56,17 +57,26 @@ public class TransactionService {
         payer.getWallet().setBalance(payer.getWallet().getBalance().subtract(amount));
         payee.getWallet().setBalance(payee.getWallet().getBalance().add(amount));
 
+        walletRepository.save(payer.getWallet());
+        walletRepository.save(payee.getWallet());
+
         Transaction transaction = new Transaction();
         transaction.setPayer(payer.getWallet());
         transaction.setPayee(payee.getWallet());
         transaction.setAmount(amount);
 
-        Transaction savedTransaction = transactionRepository.save(transaction);
+        var savedTransaction = transactionRepository.save(transaction);
 
         notificationService.sendNotification(payee, "Você recebeu uma tranferência: " + amount);
         notificationService.sendNotification(payer, "Transferência de R$ "+ amount + " realizada com sucesso!");
 
-        return savedTransaction;
+        return new TransactionResponseDTO(
+                savedTransaction.getId(),
+                savedTransaction.getAmount(),
+                payerId,
+                payeeId,
+                savedTransaction.getTimestamp()
+        );
     }
 
     private boolean isAuthorized() {

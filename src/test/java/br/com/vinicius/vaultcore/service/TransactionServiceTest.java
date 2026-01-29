@@ -1,8 +1,8 @@
 package br.com.vinicius.vaultcore.service;
 
 import br.com.vinicius.vaultcore.client.AuthorizationClient;
+import br.com.vinicius.vaultcore.dto.TransactionResponseDTO;
 import br.com.vinicius.vaultcore.exception.BusinessException;
-import br.com.vinicius.vaultcore.model.Transaction;
 import br.com.vinicius.vaultcore.model.User;
 import br.com.vinicius.vaultcore.model.Wallet;
 import br.com.vinicius.vaultcore.repository.TransactionRepository;
@@ -94,7 +94,7 @@ class TransactionServiceTest {
         when(transactionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         BigDecimal transferValue = new BigDecimal("100.00");
-        Transaction result = transactionService.transfer(1L, 2L, transferValue);
+        TransactionResponseDTO result = transactionService.transfer(1L, 2L, transferValue);
 
         assertNotNull(result);
         assertEquals(0, new BigDecimal("900.00").compareTo(payer.getWallet().getBalance()));

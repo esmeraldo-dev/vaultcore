@@ -7,6 +7,7 @@ import br.com.vinicius.vaultcore.model.Wallet;
 import br.com.vinicius.vaultcore.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public User createUser(UserDTO data) {
@@ -28,13 +30,15 @@ public class UserService {
         newUser.setLastName(data.lastName());
         newUser.setDocument(data.document());
         newUser.setEmail(data.email());
-        newUser.setPassword(data.password());
         newUser.setUserType(data.userType());
+
+        String encryptedPassword = passwordEncoder.encode(data.password());
+
+        newUser.setPassword(encryptedPassword);
 
         Wallet wallet = new Wallet();
         wallet.setBalance(data.balance());
         wallet.setUser(newUser);
-
         newUser.setWallet(wallet);
 
         return userRepository.save(newUser);
