@@ -5,20 +5,40 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Object> handleBusinessException(BusinessException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("Timestamp", LocalDateTime.now());
-        body.put("Status", 400);
-        body.put("Error", "Regra de Negócio Violada");
-        body.put("Message", ex.getMessage());
+    public ResponseEntity<ErrorMessage> handleBusinessException(BusinessException ex) {
+        ErrorMessage error = new ErrorMessage(
+                LocalDateTime.now(),
+                400,
+                "Erro de Negócio",
+                ex.getMessage()
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
 
-        return ResponseEntity.badRequest().body(body);
+    @ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
+    public ResponseEntity<ErrorMessage> handleConstraintException(Exception ex) {
+        ErrorMessage error = new ErrorMessage(
+                LocalDateTime.now(),
+                400,
+                "Erro de Validação",
+                "Dados inválidos ou já cadastrados no sistema."
+        );
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessage> handleGeneralException(Exception ex) {
+        ErrorMessage error = new ErrorMessage(
+                LocalDateTime.now(),
+                500,
+                "Erro Interno",
+                "Ocorreu um erro inesperado no servidor."
+        );
+        return ResponseEntity.internalServerError().body(error);
     }
 }

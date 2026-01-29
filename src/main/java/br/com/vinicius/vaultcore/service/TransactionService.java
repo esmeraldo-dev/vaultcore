@@ -4,6 +4,7 @@ import br.com.vinicius.vaultcore.client.AuthorizationClient;
 import br.com.vinicius.vaultcore.exception.BusinessException;
 import br.com.vinicius.vaultcore.model.Transaction;
 import br.com.vinicius.vaultcore.model.User;
+import br.com.vinicius.vaultcore.model.UserType;
 import br.com.vinicius.vaultcore.repository.TransactionRepository;
 import br.com.vinicius.vaultcore.repository.UserRepository;
 import br.com.vinicius.vaultcore.repository.WalletRepository;
@@ -41,6 +42,10 @@ public class TransactionService {
 
         if (payer.getWallet().getBalance().compareTo(amount) < 0) {
             throw new BusinessException("Saldo insuficiente na conta");
+        }
+
+        if (payer.getUserType() == UserType.MERCHANT) { // Ou o nome do seu Enum
+            throw new BusinessException("Lojistas não podem realizar transferências, apenas receber.");
         }
 
         if (!isAuthorized()){
