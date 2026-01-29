@@ -44,6 +44,8 @@ class TransactionServiceTest {
     private WalletRepository walletRepository;
     @Mock
     private AuthorizationClient authClient;
+    @Mock
+    private NotificationService notificationService;
 
     private TransactionService transactionService;
 
@@ -54,7 +56,8 @@ class TransactionServiceTest {
                 transactionRepository,
                 userRepository,
                 walletRepository,
-                authClient
+                authClient,
+                notificationService
         );
     }
 
