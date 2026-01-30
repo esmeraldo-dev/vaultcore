@@ -1,7 +1,6 @@
 package br.com.vinicius.vaultcore.dto;
 
 
-
 import br.com.vinicius.vaultcore.model.UserType;
 
 import java.math.BigDecimal;

@@ -21,7 +21,7 @@ public class NotificationService {
         try {
             notificationClient.sendNotification(notificationRequest);
             System.out.println("Notificação enviada com sucesso para: " + email);
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("ALERTA: Falha ao notificar " + user.getEmail() + " mas a transação foi salva. Erro: " + e.getMessage());
         }
     }

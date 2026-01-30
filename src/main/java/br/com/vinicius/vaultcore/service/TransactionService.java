@@ -50,7 +50,7 @@ public class TransactionService {
             throw new BusinessException("Lojistas não podem realizar transferências, apenas receber.");
         }
 
-        if (!isAuthorized()){
+        if (!isAuthorized()) {
             throw new BusinessException("Transação não autorizada pelo serviço externo.");
         }
 
@@ -68,7 +68,7 @@ public class TransactionService {
         var savedTransaction = transactionRepository.save(transaction);
 
         notificationService.sendNotification(payee, "Você recebeu uma tranferência: " + amount);
-        notificationService.sendNotification(payer, "Transferência de R$ "+ amount + " realizada com sucesso!");
+        notificationService.sendNotification(payer, "Transferência de R$ " + amount + " realizada com sucesso!");
 
         return new TransactionResponseDTO(
                 savedTransaction.getId(),

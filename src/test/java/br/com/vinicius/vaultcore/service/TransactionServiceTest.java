@@ -63,7 +63,7 @@ class TransactionServiceTest {
 
     @Test
     @DisplayName("Deve lançar exceção quando o pagador não tiver saldo suficiente")
-    void transferCase1(){
+    void transferCase1() {
         User payer = createUser(1L, "10.00");
         User payee = createUser(2L, "50.00");
 
@@ -81,7 +81,7 @@ class TransactionServiceTest {
 
     @Test
     @DisplayName("Deve realizar transferência com sucesso quando todos os dados forem válidos")
-    void transferCase2(){
+    void transferCase2() {
         User payer = createUser(1L, "1000.00");
         User payee = createUser(2L, "500.00");
 
@@ -104,7 +104,7 @@ class TransactionServiceTest {
 
     @Test
     @DisplayName("Deve lançar exceção quando o pagador tenta transferir para si mesmo")
-    void transferCase3(){
+    void transferCase3() {
         Long sameId = 1L;
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
@@ -117,7 +117,7 @@ class TransactionServiceTest {
 
     @Test
     @DisplayName("Deve lançar exceção quando um dos usuários não for encontrado.")
-    void transferCase4(){
+    void transferCase4() {
         Long invalidId = 999L;
 
         when(userRepository.findById(invalidId)).thenReturn(Optional.empty());
