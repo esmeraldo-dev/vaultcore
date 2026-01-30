@@ -1,7 +1,6 @@
 package br.com.vinicius.vaultcore.model;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -67,7 +66,7 @@ public class User implements UserDetails {
     }
     @Override
     public String getUsername() {
-        return email; // O Spring usa o email como "username"
+        return email;
     }
 
     @Override

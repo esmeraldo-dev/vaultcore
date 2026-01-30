@@ -22,10 +22,13 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
         var token = this.recoverToken(request);
         if(token != null){
-            var login = tokenService.validateToken(token); // Precisamos criar esse método no TokenService!
+            var login = tokenService.validateToken(token);
             UserDetails user = userRepository.findByEmail(login).orElseThrow();
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
