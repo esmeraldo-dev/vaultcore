@@ -121,6 +121,15 @@ Como todo bom software, este está em constante evolução. Os próximos passos 
 
 [ ] Observabilidade: Adicionar logs estruturados e métricas com Prometheus/Grafana.
 
+---
 
+## 👨‍💻 Autor
 
-Desenvolvido por Vinícius Esmeraldo.
+**Vinícius Esmeraldo**
+*Desenvolvedor Backend Java*
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/viniciusesmeraldo)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/esmeraldo-dev)
+
+---
+*Projeto desenvolvido com foco em Clean Code e Arquitetura Segura.*
