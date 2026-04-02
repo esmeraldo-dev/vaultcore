@@ -22,7 +22,7 @@ O projeto foi construído com a stack moderna do ecossistema Java:
 - **Spring Data JPA / Hibernate**: Persistência e modelagem de dados.
 - **PostgreSQL**: Banco de dados relacional (Produção/Dev).
 - **H2 Database**: Banco em memória para testes rápidos.
-- **Spring Security + JWT**: (Implementado para proteção de rotas sensíveis).
+- **Spring Security + JWT**: Implementado para proteção de rotas sensíveis.
 - **Spring Cloud OpenFeign**: Integração com serviços externos (Autorizador).
 - **Lombok**: Redução de boilerplate code.
 - **JUnit 5 & Mockito**: Testes Unitários e de Integração.
@@ -34,28 +34,28 @@ O projeto foi construído com a stack moderna do ecossistema Java:
 
 O projeto segue uma arquitetura em camadas bem definida:
 
-1.  **Controllers (`@RestController`)**: Entradas da API, tratamento de DTOs e repasse para a camada de serviço.
-2.  **Services (`@Service`)**: Onde a mágica acontece. Contém toda a lógica de negócio, validações de saldo, regras de lojista e orquestração de transações.
-3.  **Repositories (`@Repository`)**: Interface com o banco de dados via JPA.
-4.  **Domain (`@Entity`)**: Modelagem das tabelas (User, Wallet, Transaction).
-5.  **Exception Handling (`@ControllerAdvice`)**: Tratamento global de erros para retornar respostas JSON amigáveis e padronizadas (RFC 7807).
+1. **Controllers (`@RestController`)**: Entradas da API, tratamento de DTOs e repasse para a camada de serviço.
+2. **Services (`@Service`)**: Onde a mágica acontece. Contém toda a lógica de negócio, validações de saldo, regras de lojista e orquestração de transações.
+3. **Repositories (`@Repository`)**: Interface com o banco de dados via JPA.
+4. **Domain (`@Entity`)**: Modelagem das tabelas (User, Wallet, Transaction).
+5. **Exception Handling (`@ControllerAdvice`)**: Tratamento global de erros para retornar respostas JSON amigáveis e padronizadas (RFC 7807).
 
 ---
 
 ## 🛠️ Funcionalidades Principais
 
-- [x] **Cadastro de Usuários**: Criação de contas para usuários Comuns e Lojistas, com validação única de CPF e E-mail.
-- [x] **Transferências Financeiras**:
-    - Transações atômicas com `@Transactional` (Rollback garantido em caso de erro).
-    - Validação de saldo disponível.
-    - Regra de negócio: **Lojistas apenas recebem**, não enviam transferências.
-- [x] **Consultas Externas**: Validação da transação via serviço mockado (simulando autorizador externo).
-- [x] **Notificações Assíncronas**: Envio de notificação (mock) processado em background para não travar a requisição do usuário.
-- [x] **Testes Automatizados**: Cobertura de testes de integração para fluxos críticos (Criação de Usuário, Transferência).
+- **Cadastro de Usuários**: Criação de contas para usuários Comuns e Lojistas, com validação única de CPF e E-mail.
+- **Transferências Financeiras**:
+  - Transações atômicas com `@Transactional` (Rollback garantido em caso de erro).
+  - Validação de saldo disponível.
+  - Regra de negócio: **Lojistas apenas recebem**, não enviam transferências.
+- **Consultas Externas**: Validação da transação via serviço mockado (simulando autorizador externo).
+- **Notificações Assíncronas**: Envio de notificação (mock) processado em background para não travar a requisição do usuário.
+- **Testes Automatizados**: Cobertura de testes de integração para fluxos críticos (Criação de Usuário, Transferência).
 
 ---
 
-## 🛠️ Como rodar o Projeto
+## 🛠️ Como Rodar o Projeto
 
 Este guia foi estruturado para ambientes **Windows** utilizando a IDE **IntelliJ IDEA**, garantindo uma configuração rápida e eficiente.
 
@@ -67,69 +67,100 @@ Este guia foi estruturado para ambientes **Windows** utilizando a IDE **IntelliJ
 
 ---
 
-### Passo a Passo
-
 ### 🚀 Passo a Passo para Configuração Local
 
 #### 1. Preparação do Banco de Dados
+
 A aplicação necessita de um banco de dados previamente criado para realizar a migração das tabelas.
-* Utilize o **pgAdmin 4** ou sua ferramenta SQL de preferência.
-* Execute o comando para criar o banco: 
+
+- Utilize o **pgAdmin 4** ou sua ferramenta SQL de preferência.
+- Execute o comando para criar o banco:
+
 ```sql
 CREATE DATABASE vaultcore_db;
 ```
+
 #### 2. Clonagem do Repositório
-Abra o terminal (Powershell ou CMD) e execute os comandos abaixo:
+
+Abra o terminal (PowerShell ou CMD) e execute:
+
 ```bash
 git clone https://github.com/esmeraldo-dev/vaultcore.git
 cd vaultcore
 ```
-### 3. Importação do Projeto
-  - Abra o IntelliJ IDEA.
-  - Vá em File > Open e selecione a pasta raiz do projeto vaultcore.
-  - Aguarde a importação das dependências pelo Maven (o progresso pode ser acompanhado no canto inferior direito da IDE).
-### 4. Configuração das Propriedades
-Para que a aplicação se conecte ao seu banco de dados local, edite o arquivo: 
-```src/main/resources/application.properties```
+
+#### 3. Importação do Projeto
+
+- Abra o IntelliJ IDEA.
+- Vá em **File > Open** e selecione a pasta raiz do projeto `vaultcore`.
+- Aguarde a importação das dependências pelo Maven (o progresso pode ser acompanhado no canto inferior direito da IDE).
+
+#### 4. Configuração das Propriedades
+
+Para que a aplicação se conecte ao seu banco de dados local, edite o arquivo:
+`src/main/resources/application.properties`
 
 Atualize as seguintes chaves com as suas credenciais:
-```Properties
+
+```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/vaultcore_db
 spring.datasource.username=seu_usuario
 spring.datasource.password=sua_senha
 spring.jpa.hibernate.ddl-auto=update
 ```
-### 5. Execução da Aplicação
+
+#### 5. Execução da Aplicação
+
 Você pode iniciar o projeto de duas formas:
 
-  -Via IDE: Localize a classe ```VaultCoreApplication.java```, clique com o botão direito e selecione a opção Run.
+- **Via IDE**: Localize a classe `VaultCoreApplication.java`, clique com o botão direito e selecione **Run**.
+- **Via Terminal (Maven Wrapper)**:
 
-  -Via Terminal (Maven Wrapper):
-```PowerShell
+```bash
 .\mvnw.cmd spring-boot:run
 ```
-### 6. Acesso à Documentação
-Com a aplicação rodando, a documentação interativa dos endpoints (Swagger/OpenAPI) estará disponível em: 🔗 http://localhost:8080/swagger-ui.html
 
-### 🔮 Melhorias Futuras (Roadmap)
+#### 6. Acesso à Documentação
 
-Como todo bom software, este está em constante evolução. Os próximos passos mapeados são:
+Com a aplicação rodando, a documentação interativa dos endpoints (Swagger/OpenAPI) estará disponível em:
 
-[ ] Controle de Concorrência: Implementar Optimistic Locking (@Version) ou Pessimistic Locking para evitar Race Conditions em transferências simultâneas extremas.
+🔗 http://localhost:8080/swagger-ui.html
 
-[ ] CI/CD: Configurar pipeline no GitHub Actions para deploy automático.
+---
 
-[ ] Observabilidade: Adicionar logs estruturados e métricas com Prometheus/Grafana.
+## 🧪 Rodando os Testes
+
+Execute a suite completa de testes via terminal:
+
+```bash
+.\mvnw.cmd test
+```
+
+Os testes cobrem os seguintes fluxos críticos, seguindo o padrão **AAA (Arrange, Act, Assert)**:
+
+- Criação e validação de usuários (Comum e Lojista)
+- Transferência com saldo insuficiente (deve lançar exceção)
+- Regra de negócio: Lojista não pode realizar transferências
+- Testes de integração com banco H2 em memória
+
+---
+
+## 🔮 Melhorias Futuras (Roadmap)
+
+- [ ] **Controle de Concorrência**: Implementar Optimistic Locking (`@Version`) ou Pessimistic Locking para evitar Race Conditions em transferências simultâneas.
+- [ ] **CI/CD**: Configurar pipeline no GitHub Actions para deploy automático.
+- [ ] **Observabilidade**: Adicionar logs estruturados e métricas com Prometheus/Grafana.
 
 ---
 
 ## 👨‍💻 Autor
 
-**Vinícius Esmeraldo**
+**Vinícius Esmeraldo**  
 *Desenvolvedor Backend Java*
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/viniciusesmeraldo)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/esmeraldo-dev)
 
 ---
+
 *Projeto desenvolvido com foco em Clean Code e Arquitetura Segura.*
